@@ -6,23 +6,42 @@ let keys = require("./keys.js");
 
 let whichAPI = process.argv[2];
 
-let artistOrMovie = process.argv[3];
-
-if (whichAPI === 'spotify-this') {
-    spotify
-        .search({ type: 'track', query: })
-}
+let artistTrackOrMovie = process.argv[3];
 
 // making it so that I can use the node-spotify-api in my app
 let Spotify = require('node-spotify-api');
 
 // creating a variable for the node-spotify-api with my specific API key
 let spotify = new Spotify(keys.spotify);
-console.log(spotify);
+// console.log(spotify);
 
+if (whichAPI === 'spotify-this-song') {
+    spotify
+        .search({ type: 'track', query: artistTrackOrMovie })
+        .then(function (response) {
+            console.log(response.tracks.items[0].album.artists[0].name);
+            console.log(response.tracks.items[0].name);
+            console.log(response.tracks.items[0].preview_url);
+            console.log(response.tracks.items[0].album.name);
+        })
+        .catch(function (err) {
+            console.log(err)
+        });
 
-spotify
-    .search({ type: 'track', query: })
+    if ( artistTrackOrMovie === false) {
+        spotify
+            .search({ type: 'track', query: 'detachable penis' })
+            .then(function (response) {
+                console.log(response.tracks.items[0].album.artists[0].name);
+                console.log(response.tracks.items[0].name);
+                console.log(response.tracks.items[0].preview_url);
+                console.log(response.tracks.items[0].album.name);
+            })
+            .catch(function (err) {
+                console.log(err)
+            });
+    };
+};
 
 
 
