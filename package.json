@@ -1,0 +1,23 @@
+{
+  "name": "liri_node_app",
+  "version": "1.0.0",
+  "description": "Homework 10 coding bootcamp node app",
+  "main": "liri.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nholdsworth/Liri_Node_App.git"
+  },
+  "author": "Nathaniel Holdsworth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nholdsworth/Liri_Node_App/issues"
+  },
+  "homepage": "https://github.com/nholdsworth/Liri_Node_App#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "node-spotify-api": "^1.0.7"
+  }
+}
