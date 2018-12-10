@@ -4,17 +4,25 @@ require("dotenv").config();
 // creating a variable to hold my API keys retireved from the .env by keys.js... 
 let keys = require("./keys.js");
 
+// storing the first user string input in a variable to determine which api call to make 
 let whichAPI = process.argv[2];
 
+// storing the second user string input to determine what to query the API call for
 let artistTrackOrMovie = process.argv[3];
 
 // making it so that I can use the node-spotify-api in my app
 let Spotify = require('node-spotify-api');
 
+// creating a variable to hold the request package
+let request = require('request');
+
 // creating a variable for the node-spotify-api with my specific API key
 let spotify = new Spotify(keys.spotify);
-// console.log(spotify);
 
+// was trying to use process.env with the bandsintown api key but it didn't work
+// let bandsInTown = new BandsInTown(keys.bandsintown) 
+
+// if the user types spotify-this-song '{a song name here}' make an api call using node-spotify-api to return back the artist name, track name, a link to a 30 second spotify sample of the track and the album the track is found on 
 if (whichAPI === 'spotify-this-song') {
     spotify
         .search({ type: 'track', query: artistTrackOrMovie })
@@ -27,21 +35,37 @@ if (whichAPI === 'spotify-this-song') {
         .catch(function (err) {
             console.log(err)
         });
+    // if the user does not input a track to search for, search for this track by default FIXME: this is not working for some reason...
+} else if (whichAPI === 'spotify-this-song' && artistTrackOrMovie === false) {
+    console.log('You did not enter a song name, and must be punished')
+    spotify
+        .search({ type: 'track', query: 'c.r.e.a.m.' })
+        .then(function (response) {
+            console.log(response.tracks.items[0].album.artists[0].name);
+            console.log(response.tracks.items[0].name);
+            console.log(response.tracks.items[0].preview_url);
+            console.log(response.tracks.items[0].album.name);
+        })
+        .catch(function (err) {
+            console.log(err)
+        });
 
-    if ( artistTrackOrMovie === false) {
-        spotify
-            .search({ type: 'track', query: 'detachable penis' })
-            .then(function (response) {
-                console.log(response.tracks.items[0].album.artists[0].name);
-                console.log(response.tracks.items[0].name);
-                console.log(response.tracks.items[0].preview_url);
-                console.log(response.tracks.items[0].album.name);
-            })
-            .catch(function (err) {
-                console.log(err)
-            });
-    };
-};
+} else if (whichAPI === 'concert-this') {
+    request("https://rest.bandsintown.com/artists/" + artistTrackOrMovie + "/events?app_id=codingbootcamp", function (error, response, body) {
+        console.log('error:', error);
+        console.log(response);
+        console.log('body:', body);
+    })
+
+} else if (whichAPI === 'movie-this') {
+    request("http://www.omdbapi.com/?apikey=49544f9c&t=" + artistTrackOrMovie, function (error, response, body) {
+        console.log('error:', error);
+        console.log('statusCode:', response && response.statusCode);
+        console.log('body:', body);
+    })
+
+}
+
 
 
 
@@ -66,6 +90,3 @@ if (whichAPI === 'spotify-this-song') {
 
 // do-what-it-says will take the text inside of random.txt and then use it to call one of liri's commands
         // 1. grab the text from random text and use it for the user input on the command line
-
-
-
