@@ -13,9 +13,14 @@ let artistTrackOrMovie = process.argv[3];
 // making it so that I can use the node-spotify-api in my app
 let Spotify = require('node-spotify-api');
 
-
 // creating a variable to hold the request package
 let request = require('request');
+
+// creating a variable to hold the moment package
+let moment = require('moment');
+
+// requiring the file system package from npm so that I can read my random.txt file 
+let fs = require('fs');
 
 // creating a variable for the node-spotify-api with my specific API key
 let spotify = new Spotify(keys.spotify);
@@ -33,10 +38,10 @@ function spotification(song) {
         spotify
             .search({ type: 'track', query: song })
             .then(function (response) {
-                console.log(response.tracks.items[0].album.artists[0].name);
-                console.log(response.tracks.items[0].name);
-                console.log(response.tracks.items[0].preview_url);
-                console.log(response.tracks.items[0].album.name);
+                console.log('The name of the band/artist is: ' + response.tracks.items[0].album.artists[0].name);
+                console.log('The name or the song is: ' + response.tracks.items[0].name);
+                console.log('Listen to a preview of this track here: ' + response.tracks.items[0].preview_url);
+                console.log('This track can be found on the album: ' + response.tracks.items[0].album.name);
             })
             .catch(function (err) {
                 console.log(err)
@@ -47,10 +52,10 @@ function spotification(song) {
         spotify
             .search({ type: 'track', query: song })
             .then(function (response) {
-                console.log(response.tracks.items[0].album.artists[0].name);
-                console.log(response.tracks.items[0].name);
-                console.log(response.tracks.items[0].preview_url);
-                console.log(response.tracks.items[0].album.name);
+                console.log('The name of the band/artist is: ' + response.tracks.items[0].album.artists[0].name);
+                console.log('The name or the song is: ' + response.tracks.items[0].name);
+                console.log('Listen to a preview of this track here: ' + response.tracks.items[0].preview_url);
+                console.log('This track can be found on the album: ' + response.tracks.items[0].album.name);
             })
             .catch(function (err) {
                 console.log(err)
@@ -58,61 +63,77 @@ function spotification(song) {
     };
 };
 
-if (whichAPI === 'spotify-this-song') {
+// This function takes the user input and searches for concerts that the user wants to see
+function findAConcert(artist) {
 
-    spotification(artistTrackOrMovie)
+    // using the request package to make an api call to the bandsintown api
+    request("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp", function (error, response, body) {
 
-} else if (whichAPI === 'concert-this') {
-
-    function findAConcert(artist) {
-
-        request("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp", function (error, response, body) {
-            // console.log('error:', error);
-            // console.log(response);
-            let bandsResponse = JSON.parse(body);
-
-            for (let i = 0; i < bandsResponse.length; i++) {
-                console.log(bandsResponse[i]);
-            }
-
-            // console.log('body:', bandsResponse);
-
-        })
-
-    }
-    request("https://rest.bandsintown.com/artists/" + artistTrackOrMovie + "/events?app_id=codingbootcamp", function (error, response, body) {
-        // console.log('error:', error);
-        // console.log(response);
+        // creating a variable to hold the parsed data returned from the bandsintown api call so that the original data remains intact but changes it from a string into an object so that I can more easily traverse the object and pull the data that I need (I think .split() would work too...)
         let bandsResponse = JSON.parse(body);
 
+        // this for loop loops through the array of objects and allows me to pull out what I need becuase NOTHING else actually worked to get this to happen
         for (let i = 0; i < bandsResponse.length; i++) {
-            console.log(bandsResponse[i]);
-        }
+            console.log('The venue for this concert is: ' + bandsResponse[i].venue.name);
+            console.log('This Venue is located in: ' + bandsResponse[i].venue.city + ', ' + bandsResponse[i].venue.country);
+            console.log
+            console.log('This concert will be held on: ' + moment(bandsResponse[i].venue.datetime).format("MM/DD/YYYY"));
 
-        // console.log('body:', bandsResponse);
+        }
 
     })
 
-} else if (whichAPI === 'movie-this') {
-    request("http://www.omdbapi.com/?apikey=49544f9c&t=" + artistTrackOrMovie, function (error, response, body) {
+};
+
+// This function takes the user input and returns data for the movie title entered 
+function movieData (title) {
+
+    request("http://www.omdbapi.com/?apikey=49544f9c&t=" + title, function (error, response, body) {
 
         let omdbResponse = JSON.parse(body);
-
-        // console.log('error:', error);
-        // console.log('statusCode:', response && response.statusCode);
-        console.log(omdbResponse);
+        
+        // this for loop loops through the ratings so that i can scope the ratings array of objects inside the omdb response object...
+        for (let i = 0; i < omdbResponse.Ratings.length; i++) {
+            console.log(omdbResponse.Ratings[i])
+        };
+        console.log('error:', error);
+        console.log('Movie title: ' + omdbResponse.Title);
+        console.log('This movie was released: ' + omdbResponse.Released);
+        console.log('The IMDB rating for this movie is: ' + omdbResponse.imdbRating);
+        // FIXME:using JSON.stringify to make the Ratings[1] into a string now  I probably need to put it into a variable and then use .split(':', ',') then loop through that array or use a regular expression to just get the rating percentage... FML REALLY??!?  
+        console.log('Rotten Tomatoes gives this move a rating of: ' + JSON.stringify(omdbResponse.Ratings[1]));
+        console.log('This movie was filmed in: ' + omdbResponse.Country);
+        console.log('This movie is in: ' + omdbResponse.Language);
+        console.log('Here is a brief synopsis of the plot: ' + omdbResponse.Plot);
+        console.log('Starring: ' + omdbResponse.Actors);
     })
 
 }
 
-let fs = require('fs');
+if (whichAPI === 'spotify-this-song') {
 
-if (whichAPI === 'do-what-it-say') {
-    fs.readFile('random.txt', 'utf8', function (error, data) {
-        data.split(",");
-        spotification(data[1]);
+    spotification(artistTrackOrMovie);
 
-    })
+} else if (whichAPI === 'concert-this') {
+
+    findAConcert(artistTrackOrMovie);
+
+} else if (whichAPI === 'movie-this') {
+
+    movieData(artistTrackOrMovie);
+
+} else if (whichAPI === 'do-what-it-say') {
+
+    function randomizer () {
+
+        fs.readFile('random.txt', 'utf8', function (error, data) {
+            data.split(",");
+            spotification(data[1]);
+    
+        })
+
+    } 
+
 }
 
 
