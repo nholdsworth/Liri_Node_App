@@ -13,57 +13,106 @@ let artistTrackOrMovie = process.argv[3];
 // making it so that I can use the node-spotify-api in my app
 let Spotify = require('node-spotify-api');
 
+
 // creating a variable to hold the request package
 let request = require('request');
 
 // creating a variable for the node-spotify-api with my specific API key
 let spotify = new Spotify(keys.spotify);
 
-// was trying to use process.env with the bandsintown api key but it didn't work
-// let bandsInTown = new BandsInTown(keys.bandsintown) 
+//FIXME: was trying to use process.env with the bandsintown api key but it didn't work
+// let bandsInTown = new BandsInTown(keys.bandsintown)
 
-// if the user types spotify-this-song '{a song name here}' make an api call using node-spotify-api to return back the artist name, track name, a link to a 30 second spotify sample of the track and the album the track is found on 
+// spotify function: if the user types spotify-this-song '{a song name here}' make an api call using node-spotify-api to return back the artist name, track name, a link to a 30 second spotify sample of the track and the album the track is found on
+function spotification(song) {
+
+    // conditional statement that handles the case where a user does not put in a song to spotify and returns the data for 
+    if (song === undefined) {
+        song = 'whitey on the moon';
+        console.log('You should check out this song by Gil Scott Heron')
+        spotify
+            .search({ type: 'track', query: song })
+            .then(function (response) {
+                console.log(response.tracks.items[0].album.artists[0].name);
+                console.log(response.tracks.items[0].name);
+                console.log(response.tracks.items[0].preview_url);
+                console.log(response.tracks.items[0].album.name);
+            })
+            .catch(function (err) {
+                console.log(err)
+            });
+        // condtional statement handles the regular case where a user follows the instructions
+    } else {
+        // using the .search method supplied by the npm-spotify-api package to return an object and then traverse through it to pull the data from it
+        spotify
+            .search({ type: 'track', query: song })
+            .then(function (response) {
+                console.log(response.tracks.items[0].album.artists[0].name);
+                console.log(response.tracks.items[0].name);
+                console.log(response.tracks.items[0].preview_url);
+                console.log(response.tracks.items[0].album.name);
+            })
+            .catch(function (err) {
+                console.log(err)
+            })
+    };
+};
+
 if (whichAPI === 'spotify-this-song') {
-    spotify
-        .search({ type: 'track', query: artistTrackOrMovie })
-        .then(function (response) {
-            console.log(response.tracks.items[0].album.artists[0].name);
-            console.log(response.tracks.items[0].name);
-            console.log(response.tracks.items[0].preview_url);
-            console.log(response.tracks.items[0].album.name);
-        })
-        .catch(function (err) {
-            console.log(err)
-        });
-    // if the user does not input a track to search for, search for this track by default FIXME: this is not working for some reason...
-} else if (whichAPI === 'spotify-this-song' && artistTrackOrMovie === false) {
-    console.log('You did not enter a song name, and must be punished')
-    spotify
-        .search({ type: 'track', query: 'c.r.e.a.m.' })
-        .then(function (response) {
-            console.log(response.tracks.items[0].album.artists[0].name);
-            console.log(response.tracks.items[0].name);
-            console.log(response.tracks.items[0].preview_url);
-            console.log(response.tracks.items[0].album.name);
-        })
-        .catch(function (err) {
-            console.log(err)
-        });
+
+    spotification(artistTrackOrMovie)
 
 } else if (whichAPI === 'concert-this') {
+
+    function findAConcert(artist) {
+
+        request("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp", function (error, response, body) {
+            // console.log('error:', error);
+            // console.log(response);
+            let bandsResponse = JSON.parse(body);
+
+            for (let i = 0; i < bandsResponse.length; i++) {
+                console.log(bandsResponse[i]);
+            }
+
+            // console.log('body:', bandsResponse);
+
+        })
+
+    }
     request("https://rest.bandsintown.com/artists/" + artistTrackOrMovie + "/events?app_id=codingbootcamp", function (error, response, body) {
-        console.log('error:', error);
-        console.log(response);
-        console.log('body:', body);
+        // console.log('error:', error);
+        // console.log(response);
+        let bandsResponse = JSON.parse(body);
+
+        for (let i = 0; i < bandsResponse.length; i++) {
+            console.log(bandsResponse[i]);
+        }
+
+        // console.log('body:', bandsResponse);
+
     })
 
 } else if (whichAPI === 'movie-this') {
     request("http://www.omdbapi.com/?apikey=49544f9c&t=" + artistTrackOrMovie, function (error, response, body) {
-        console.log('error:', error);
-        console.log('statusCode:', response && response.statusCode);
-        console.log('body:', body);
+
+        let omdbResponse = JSON.parse(body);
+
+        // console.log('error:', error);
+        // console.log('statusCode:', response && response.statusCode);
+        console.log(omdbResponse);
     })
 
+}
+
+let fs = require('fs');
+
+if (whichAPI === 'do-what-it-say') {
+    fs.readFile('random.txt', 'utf8', function (error, data) {
+        data.split(",");
+        spotification(data[1]);
+
+    })
 }
 
 
