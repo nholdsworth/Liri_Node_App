@@ -72,7 +72,13 @@ function spotification(song) {
 // This function takes the user input and searches for concerts that the user wants to see
 function findAConcert(artist) {
 
-    console.log('function executed');
+    // If the user does not request concerts for a certain band it will search for father john misty
+    if(artist === undefined) {
+        artist = 'Father John Misty'
+        console.log('you did not request concerts for a specific artist how about going to see Father John Misty?\n')
+    }
+
+    // console.log('function executed');
     // using the request package to make an api call to the bandsintown api
     request("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp", function (error, response, body) {
 
