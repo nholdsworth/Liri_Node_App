@@ -6,7 +6,7 @@ LIRI is a node app.  LIRI is like SIRI but instead of speeech, LIRI responds to 
 
 ### How To Use Liri
 
-LIRI is very particular about how you make requests of him.  Yes LIRI is also a boy and despite being spelled LIRI it is actually pronounced Larry.  
+LIRI is very particular about how you make requests of him.  Yes LIRI is a boy.  Despite being spelled LIRI it is actually pronounced Larry.  
 
 LIRI will search for songs, movies, and concerts if you ask him the right way.  Otherwise, he will not be very helpful.
 
