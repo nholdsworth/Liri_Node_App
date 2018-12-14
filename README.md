@@ -12,10 +12,10 @@ LIRI will search for songs, movies, and concerts if you ask him the right way.  
 
 There are four phrases that LIRI understands and they must be typed exactly as they are shown below:
     
-    1. spotify-this-song 'name of song here'
-    2. concert-this 'name of band or artist here'
-    3. movie-this 'name of movie here'
-    4. do-what-it-says
+    1. node liri.js spotify-this-song 'name of song here'
+    2. node liri.js concert-this 'name of band or artist here'
+    3. node liri.js movie-this 'name of movie here'
+    4. node liri.js do-what-it-says
 
 The first command will take the name of a song and search spotify and return the name of the artist, the name of the song, a link to a thirty second spotify preview of the track and the album that the song can be found on.
 
@@ -35,9 +35,3 @@ The third command will search OMDB for data for the requested movie title and re
 The fourth request will pick a random song, artist or movie to return data for from a list curated by the developer.
 
 :v:
-
-
-
-
-
-

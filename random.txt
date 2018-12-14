@@ -1,8 +1,11 @@
-concert-this, 'Snoop Doggy Dogg'
-concert-this, 'Colter Wall'
-concert-this, 'Tyler The Creator'
-concert-this, 'KRS One'
-concert-this, 'Tash Sultana'
+concert-this, Snoop Doggy Dogg
+concert-this, Colter Wall
+concert-this, Tyler The Creator
+concert-this, KRS One
+concert-this, Tash Sultana
+concert-this, Anderson Paak
+concert-this, The Green
+concert-this, Andy Shauf 
 spotify-this-song, 'me against the world'
 spotify-this-song, 'the shrine an argument'
 spotify-this-song, 'so was red'
@@ -10,10 +13,13 @@ spotify-this-song, 'gymnopedie no. 3'
 spotify-this-song, 'Ladders'
 spotify-this-song, 'untitled 06| 06.30.2014'
 spotify-this-song, '3c romp'
+spotify-this-song, 'make your move'
+spotify-this-song, 'above the clouds'
+spotify-this-song, 'early to the party'
 movie-this, 'What About Bob'
 movie-this, 'Lost in Translation'
 movie-this, 'Cool Hand Luke'
 movie-this, 'Tombstone'
-movie-this, 'Up'
+movie-this, 'dumb and dumber'
 movie-this, 'Dr. Strangelove'
-movie-this, 'contact'
+movie-this, 'Encino Man'
