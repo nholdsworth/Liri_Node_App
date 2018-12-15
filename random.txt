@@ -23,3 +23,5 @@ movie-this, 'Tombstone'
 movie-this, 'dumb and dumber'
 movie-this, 'Dr. Strangelove'
 movie-this, 'Encino Man'
+movie-this, 'contact'
+andre 3000

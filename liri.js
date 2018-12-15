@@ -1,4 +1,4 @@
-// TODO:switch statements and fix the ratings in omdb for the cases of pee-wee's big adventure and bill and teds excellent adventure...
+// TODO:fix the ratings in omdb for the cases of pee-wee's big adventure and bill and teds excellent adventure...
 
 // code to read and set any environment variables with the dotenv package (I think this is so that process.env works in the keys.js file?)
 require("dotenv").config();
@@ -76,9 +76,6 @@ function findAConcert(artist) {
         // creating a variable to hold the parsed data returned from the bandsintown api call so that the original data remains intact but changes it from a string into an object so that I can more easily traverse the object and pull the data that I need (I think .split() would work too...)
         let bandsResponse = JSON.parse(body);
 
-        // I am leaving this console log becuase the bands in town response is unpredictable at best and you might want to see what is actually being returned and maybe help me figure out why the response is so unpredictable
-        // console.log(bandsResponse);
-
         // this for loop loops through the array of objects and allows me to pull out what I need becuase NOTHING else actually worked to get this to happen
         for (let i = 0; i < bandsResponse.length; i++) {
 
@@ -136,20 +133,22 @@ function movieData(title) {
 
 };
 
-if (whichAPI === 'spotify-this-song') {
+// This switch statement handles the 
+switch (whichAPI) {
 
-    spotification(artistTrackOrMovie);
+    case 'spotify-this-song':
+        spotification(artistTrackOrMovie);
+        break;
 
-} else if (whichAPI === 'concert-this') {
+    case 'concert-this': 
+        findAConcert(artistTrackOrMovie);
+        break;
 
-    findAConcert(artistTrackOrMovie);
-
-} else if (whichAPI === 'movie-this') {
-
+    case 'movie-this':
     movieData(artistTrackOrMovie);
+    break;
 
-} else if (whichAPI === 'do-what-it-says') {
-
+    case 'do-what-it-says':
     console.log('I see you have requested that I pull a random selection from Nathaniel\'s custom curated list of awesome choices!  Here you go, enjoy!\n');
 
     // this is the readfile package which reads the file placed in the method as the first argument in this case 'random.txt'
@@ -158,13 +157,14 @@ if (whichAPI === 'spotify-this-song') {
         // this takes the data inside my random.txt file and splits it on every line break and stores it in the variable randomText so that each line has argv[2] (whichAPI) and argv[3] (artistTrackOrMovie) needed for use as random inputs to the command line
         let randomText = data.split('\n');
 
-        // this takes the ramdomText variable and selects a random   
+        // this takes the ramdomText variable and selects a random line of text from the array that it created and puts that line into a new array and splits it by the comma into two new indexes in a new array  
         let randomEntertainment = randomItem(randomText).split(',');
 
-        console.log(randomEntertainment[0]);
+        // these two console logs are to test that the previous .split(',') is working as expected
+        // console.log(randomEntertainment[0]);
+        // console.log(randomEntertainment[1]);
 
-        console.log(randomEntertainment[1]);
-
+        // these conditional statement block takes the the first index of the random input array and uses it to make the appropirate api call for the random artist track or movie that accompanies it.  I didn't use a switch statement here becuase I found that the last else was not as easy to get working.  I beleive that what this shows is that if else statements are better suited for error handling...
         if (randomEntertainment[0] === 'spotify-this-song') {
             spotification(randomEntertainment[1])
 
