@@ -61,7 +61,7 @@ function spotification(song) {
 function findAConcert(artist) {
 
     // this console log was crucial for figuring out why my do-what-it-says bands in town api call was nopt working.  If you want to see the difference between the concert-this '<artist name>' and the do what it says remove .trim() from line 170 and remove all but one concert-this from the random.txt file, then put '' marks around the artist name in the random.txt.  Then, concert-this the remaining artist from the random.txt file.  Finally, do the do-what-it-says and compare the difference in what line 60 returns.  WHY does this happen??! 
-    console.log(`findAConcert|${artist}|`);
+    // console.log(`findAConcert|${artist}|`);
 
     // If the user does not request concerts for a certain band it will search for father john misty
     if (artist === undefined) {
@@ -133,7 +133,7 @@ function movieData(title) {
 
 };
 
-// This switch statement handles the 
+// This switch statement runs one of four functions for a spotify api call, a bands in town api call or a omdb api call based on what the user types and passes in the the artist track or movie they are searching for as the argument.  The fourth option takes a random selection from the random.txt file and uses index[0] of the randomEntertianment to decide which api to call and index[1] as the artist song or movie to be searched for.  
 switch (whichAPI) {
 
     case 'spotify-this-song':
@@ -169,7 +169,8 @@ switch (whichAPI) {
             spotification(randomEntertainment[1])
 
         } else if (randomEntertainment[0] === 'concert-this') {
-            console.log("About to find a concert for:", randomEntertainment[1]);
+            // this console.log helped me troubleshoot for why the do-what-it-says was not working for concerts
+            // console.log("About to find a concert for:", randomEntertainment[1]);
             findAConcert(randomEntertainment[1].trim())
 
         } else if (randomEntertainment[0] === 'movie-this') {
