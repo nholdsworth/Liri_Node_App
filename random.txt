@@ -24,4 +24,7 @@ movie-this, 'dumb and dumber'
 movie-this, 'Dr. Strangelove'
 movie-this, 'Encino Man'
 movie-this, 'contact'
+movie-this, 'my neighbor totoro'
+movie-this, 'spirited away'
+movie-this, 'Grandmaster'
 andre 3000

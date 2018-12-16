@@ -107,6 +107,7 @@ function movieData(title) {
         };
 
         let omdbResponse = JSON.parse(body);
+        console.log(omdbResponse);
 
         if (omdbResponse.Error === 'Movie not found!') {
             console.log(`Movie not found.  Sorry about that!\n`)
@@ -118,7 +119,6 @@ function movieData(title) {
                 // console.log(omdbResponse.Ratings[i])
 
             };
-
 
             // These console.logs are printing out different bits of information from the body of the response
             console.log(`Movie title: ${omdbResponse.Title}`);
@@ -139,7 +139,7 @@ function movieData(title) {
 switch (whichAPI) {
 
     default:
-    console.log(`MY name is Larry.  I'm sorry I did not recognize ytour command.  Please type one of the following:
+        console.log(`MY name is Larry.  I'm sorry I did not recognize ytour command.  Please type one of the following:
     \n
     spotify-this-song 'name of song here'
     \n
@@ -149,9 +149,8 @@ switch (whichAPI) {
     \n
     do-what-it-says
     \n
-    I wish I could do more but, if wishes were horse's all poor men would ride and if turnips were pocket watches, I would keep one by my side.  Mmmmm turnips... 
-    `);
-    break;
+I wish I could do more but... if wishes were horse's all poor men would ride and if turnips were pocket watches, I would keep one by my side.  Mmmmm turnips...\n`);
+        break;
 
     case 'spotify-this-song':
         spotification(artistTrackOrMovie);
@@ -177,7 +176,7 @@ switch (whichAPI) {
             // this takes the ramdomText variable and selects a random line of text from the array that it created and puts that line into a new array and splits it by the comma into two new indexes in a new array  
             let randomEntertainment = randomItem(randomText).split(',');
 
-            // these conditional statement block takes the the first index of the random input array and uses it to make the appropirate api call for the random artist track or movie that accompanies it.  I didn't use a switch statement here becuase I found that the last else was not as easy to get working.  I beleive that what this shows is that 'if else' statements are better suited for error handling...
+            // these conditional statement block takes the the first index of the random input array and uses it to make the appropirate api call for the random artist track or movie that accompanies it.  I didn't use a switch statement here becuase I found that the last else was not as easy to get working.  I beleive that what this shows is that 'if else' statements are better suited for error handling... actually  I figured out how to do error the error handling with the switch statement but I am keeping this as an if else just to have one of each in my code
             if (randomEntertainment[0] === 'spotify-this-song') {
                 spotification(randomEntertainment[1])
 
@@ -195,33 +194,3 @@ switch (whichAPI) {
             };
         });
 };
-
-// I was trying to figure out a way to handle the case where the user enters an incorrect command as a way to remind the user of what command will work and the exact syntax for those commands
-
-// else if (whichAPI == '*') {
-//     console.log('I\'m sorry, I do not recognize that command, please try again using the following syntax: spotify-this-song \'song name here\', movie-this \'movie name here\', concert-this \'artist name here\', do-what-it-says');
-// };
-
-// This is my psuedo code that I used to try to break down the homework step by step
-
-// concert-this <artist/band name> will make an api call to bands in town Artists events API for an artist and render the following information to the terminal
-    // 1. grab user input and put it in a variable
-    // 2. take what comes after 'concert-this' and store it in a variable
-    // 3. use that variable inside the api call to return the band specific info
-    // 4.  Pick through the object for the name of the venue, venue location, date of the event (use moment to format this as MM/DD/YYYY
-
-// spotify-this <snog name here>
-        // 1. grab user input and put it in a variable
-        // 2. take what comes after 'concert-this' and store it in a variable
-        // 3. use that variable inside the api call to return the band specific info.
-        // 4. pick through the object to return the the Artist of the song, the song's name, a preview link of the song from spotify and the album that the song is from
-        // 5. If no song is provided program should have a default song that it returns info about
-
-// movie-this <movie name here>
-        // 1. grab user input and put it in a variable
-        // 2. take what comes after 'concert-this' and store it in a variable
-        // 3. use that variable in the api call to omdb api
-        // 4. pck through the object to return the title of the movie, year released, imdb rating, rotten tomatoes, country movie was made in, language of the movie, plot, and actors
-
-// do-what-it-says will take the text inside of random.txt and then use it to call one of liri's commands
-        // 1. grab the text from random text and use it for the user input on the command line
