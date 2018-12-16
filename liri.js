@@ -1,5 +1,3 @@
-// TODO:fix the ratings in omdb for the cases of pee-wee's big adventure and bill and teds excellent adventure...
-
 // code to read and set any environment variables with the dotenv package (I think this is so that process.env works in the keys.js file?)
 require("dotenv").config();
 
@@ -103,31 +101,35 @@ function movieData(title) {
     // The request docs provide the sytax for its use which I followed here to make an api call to omdb
     request("http://www.omdbapi.com/?apikey=49544f9c&t=" + title, function (error, response, body) {
 
-        let omdbResponse = JSON.parse(body);
-
-        // this for loop loops through the ratings array (which has three little objects in it) so that i can scope the Ratings key and pull out the Rotten Tomatoes Value
-        for (let i = 0; i < omdbResponse.Ratings.length; i++) {
-
-            // I left this console log in here so that you can see what the result of the for loop looks like and why I used it
-            // console.log(omdbResponse.Ratings[i])
-        };
-
         // If there is an error display the error message otherwise do not
         if (error == true) {
-
             console.log('error:', error);
-
         };
 
-        // These console.logs are printing out different bits of information from the body of the response
-        console.log(`Movie title: ${omdbResponse.Title}`);
-        console.log(`This movie was released: ${omdbResponse.Released}`);
-        console.log(`The IMDB rating for this movie is: ${omdbResponse.imdbRating}`);
-        console.log(`Rotten Tomatoes gives this move a rating of: ${omdbResponse.Ratings[1].Value}`);
-        console.log(`This movie was filmed in: ${omdbResponse.Country}`);
-        console.log(`This movie is in: ${omdbResponse.Language}`);
-        console.log(`Here is a brief synopsis of the plot: ${omdbResponse.Plot}`);
-        console.log(`Starring: ${omdbResponse.Actors} \n\nThis concludes the information for your current request.  Thank you for using Liri. \n`);
+        let omdbResponse = JSON.parse(body);
+
+        if (omdbResponse.Error === 'Movie not found!') {
+            console.log(`Movie not found.  Sorry about that!\n`)
+        } else {
+            // this for loop loops through the ratings array (which has three little objects in it) so that i can scope the Ratings key and pull out the Rotten Tomatoes Value
+            for (let i = 0; i < omdbResponse.Ratings.length; i++) {
+
+                // I left this console log in here so that you can see what the result of the for loop looks like and why I used it
+                // console.log(omdbResponse.Ratings[i])
+
+            };
+
+
+            // These console.logs are printing out different bits of information from the body of the response
+            console.log(`Movie title: ${omdbResponse.Title}`);
+            console.log(`This movie was released: ${omdbResponse.Released}`);
+            console.log(`The IMDB rating for this movie is: ${omdbResponse.imdbRating}`);
+            console.log(`Rotten Tomatoes gives this move a rating of: ${omdbResponse.Ratings[1].Value}`);
+            console.log(`This movie was filmed in: ${omdbResponse.Country}`);
+            console.log(`This movie is in: ${omdbResponse.Language}`);
+            console.log(`Here is a brief synopsis of the plot: ${omdbResponse.Plot}`);
+            console.log(`Starring: ${omdbResponse.Actors} \n\nThis concludes the information for your current request.  Thank you for using Liri. \n`);
+        }
 
     });
 
@@ -136,50 +138,62 @@ function movieData(title) {
 // This switch statement runs one of four functions for a spotify api call, a bands in town api call or a omdb api call based on what the user types and passes in the the artist track or movie they are searching for as the argument.  The fourth option takes a random selection from the random.txt file and uses index[0] of the randomEntertianment to decide which api to call and index[1] as the artist song or movie to be searched for.  
 switch (whichAPI) {
 
+    default:
+    console.log(`MY name is Larry.  I'm sorry I did not recognize ytour command.  Please type one of the following:
+    \n
+    spotify-this-song 'name of song here'
+    \n
+    concert-this 'name of band or artist here'
+    \n
+    movie-this 'name of movie here'
+    \n
+    do-what-it-says
+    \n
+    I wish I could do more but, if wishes were horse's all poor men would ride and if turnips were pocket watches, I would keep one by my side.  Mmmmm turnips... 
+    `);
+    break;
+
     case 'spotify-this-song':
         spotification(artistTrackOrMovie);
         break;
 
-    case 'concert-this': 
+    case 'concert-this':
         findAConcert(artistTrackOrMovie);
         break;
 
     case 'movie-this':
-    movieData(artistTrackOrMovie);
-    break;
+        movieData(artistTrackOrMovie);
+        break;
 
     case 'do-what-it-says':
-    console.log('I see you have requested that I pull a random selection from Nathaniel\'s custom curated list of awesome choices!  Here you go, enjoy!\n');
+        console.log('I see you have requested that I pull a random selection from Nathaniel\'s custom curated list of awesome choices!  Here you go, enjoy!\n');
 
-    // this is the readfile package which reads the file placed in the method as the first argument in this case 'random.txt'
-    fs.readFile('random.txt', 'utf8', function (error, data) {
+        // this is the readfile package which reads the file placed in the method as the first argument in this case 'random.txt'
+        fs.readFile('random.txt', 'utf8', function (error, data) {
 
-        // this takes the data inside my random.txt file and splits it on every line break and stores it in the variable randomText so that each line has argv[2] (whichAPI) and argv[3] (artistTrackOrMovie) needed for use as random inputs to the command line
-        let randomText = data.split('\n');
+            // this takes the data inside my random.txt file and splits it on every line break and stores it in the variable randomText so that each line has argv[2] (whichAPI) and argv[3] (artistTrackOrMovie) needed for use as random inputs to the command line
+            let randomText = data.split('\n');
 
-        // this takes the ramdomText variable and selects a random line of text from the array that it created and puts that line into a new array and splits it by the comma into two new indexes in a new array  
-        let randomEntertainment = randomItem(randomText).split(',');
+            // this takes the ramdomText variable and selects a random line of text from the array that it created and puts that line into a new array and splits it by the comma into two new indexes in a new array  
+            let randomEntertainment = randomItem(randomText).split(',');
 
-        // these two console logs are to test that the previous .split(',') is working as expected
-        // console.log(randomEntertainment[0]);
-        // console.log(randomEntertainment[1]);
+            // these conditional statement block takes the the first index of the random input array and uses it to make the appropirate api call for the random artist track or movie that accompanies it.  I didn't use a switch statement here becuase I found that the last else was not as easy to get working.  I beleive that what this shows is that 'if else' statements are better suited for error handling...
+            if (randomEntertainment[0] === 'spotify-this-song') {
+                spotification(randomEntertainment[1])
 
-        // these conditional statement block takes the the first index of the random input array and uses it to make the appropirate api call for the random artist track or movie that accompanies it.  I didn't use a switch statement here becuase I found that the last else was not as easy to get working.  I beleive that what this shows is that if else statements are better suited for error handling...
-        if (randomEntertainment[0] === 'spotify-this-song') {
-            spotification(randomEntertainment[1])
+            } else if (randomEntertainment[0] === 'concert-this') {
 
-        } else if (randomEntertainment[0] === 'concert-this') {
-            // this console.log helped me troubleshoot for why the do-what-it-says was not working for concerts
-            // console.log("About to find a concert for:", randomEntertainment[1]);
-            findAConcert(randomEntertainment[1].trim())
+                // this console.log helped me troubleshoot for why the do-what-it-says was not working for concerts
+                // console.log("About to find a concert for:", randomEntertainment[1]); it's because the bands in town api did not like the space or the quotation marks but the other API's handled those fine so I took out the '' and I used .trim() to get rid of the space...
+                findAConcert(randomEntertainment[1].trim())
 
-        } else if (randomEntertainment[0] === 'movie-this') {
-            movieData(randomEntertainment[1])
+            } else if (randomEntertainment[0] === 'movie-this') {
+                movieData(randomEntertainment[1])
 
-        } else {
-            console.log('lean a little bit closer see that roses really smell like Oooh Oooh Ooooh -Andre 3000');
-        };
-    });
+            } else {
+                console.log('lean a little bit closer see that roses really smell like Oooh Oooh Ooooh -Andre 3000');
+            };
+        });
 };
 
 // I was trying to figure out a way to handle the case where the user enters an incorrect command as a way to remind the user of what command will work and the exact syntax for those commands
